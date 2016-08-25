@@ -1,28 +1,49 @@
 package redistest
 
 import (
-    "github.com/garyburd/redigo/redis"
+	"github.com/garyburd/redigo/redis"
 )
 
-var conn redis.Conn
-
-func Init(redisIp string,redisPort string)error{
-    var err error
-    conn,err = redis.Dial(redisIp,redisPort)
-    return err
+//var conn redis.Conn
+func newPool() *redis.Pool {
+	return &redis.Pool{
+		MaxIdle:   80,
+		MaxActive: 20000,
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", "localhost:6379")
+			if err != nil {
+				panic(err.Error())
+			}
+			return c, err
+		},
+	}
 }
 
-func DoGet(userId string)string{
-    str,_ := redis.String(conn.Do("HGET",userId,"ad1"))
-    return str
+var pool = newPool()
+
+/*
+func Init()error{
+    pool = newPool()
+}
+*/
+
+func getConn() redis.Conn {
+	c := pool.Get()
+	return c
 }
 
-func PipeGet(userId string)string{
-    conn.Send("HGET",userId,"ad1")
-    conn.Flush()
-    str,_ := redis.String(conn.Receive())
-    return str
+func releaseConn(c *redis.Conn) {
+	(*c).Close()
 }
-func Release(){
-    conn.Close()
+
+func DoGet(userId string) {
+	c := getConn()
+    c.Do("INCR",userId)
+    c.Close()
+}
+
+func PipeGet(userId string) {
+    c := getConn()
+    c.Send("INCR",userId)
+    c.Close()
 }
