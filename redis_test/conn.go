@@ -38,12 +38,12 @@ func releaseConn(c *redis.Conn) {
 
 func DoGet(userId string) {
 	c := getConn()
-    c.Do("INCR",userId)
-    c.Close()
+	c.Do("INCR", userId)
+	c.Close()
 }
 
 func PipeGet(userId string) {
-    c := getConn()
-    c.Send("INCR",userId)
-    c.Close()
+	c := getConn()
+	c.Send("INCR", userId)
+	c.Close()
 }
