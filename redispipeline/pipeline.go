@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 package RedisCtrl
+=======
+package main
+>>>>>>> b10514a02d9a0e099da7f19f0668315ba13a44c4
 
 import (
 	"fmt"
@@ -6,7 +10,12 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
+<<<<<<< HEAD
 func DoRedis(c redis.Conn) {
+=======
+func main() {
+	c, _ := redis.Dial("tcp", "localhost:6379")
+>>>>>>> b10514a02d9a0e099da7f19f0668315ba13a44c4
 	c.Send("MULTI")
 	c.Send("INCR", "foo0")
 	c.Send("INCR", "foo1")
