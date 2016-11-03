@@ -1,0 +1,32 @@
+package main
+
+import (
+	"fmt"
+	"sync"
+    "runtime"
+)
+
+var count int = 0
+var mu sync.Mutex
+
+func add() {
+	mu.Lock()
+	defer mu.Unlock()
+	count += 1
+	fmt.Println(count)
+}
+
+func main() {
+	for i := 0; i < 10; i++ {
+		go add()
+	}
+	for {
+		mu.Lock()
+		c := count
+        mu.Unlock()
+        runtime.Gosched()
+		if c >= 10 {
+			break
+		}
+	}
+}

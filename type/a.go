@@ -1,6 +1,6 @@
 package main
 import "fmt"
 func main(){
-    var a error
+    a := "asd"
     fmt.Println(a)
 }

@@ -12,6 +12,11 @@ var Usage = func() {
 
 func main() {
 	args := os.Args
+    aa := Date{
+        num:1,
+        Elem:2,
+    }
+    fmt.Println("------",aa.Elem)
 	if args == nil || len(args) < 2 {
 		Usage()
 		return
